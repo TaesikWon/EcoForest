@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}분석 결과{% endblock %}
+
+{% block content %}
+<h2>🌲 산림 데이터 분석 결과</h2>
+
+{% if result %}
+  <p><b>총 면적:</b> {{ result.total_area }}</p>
+  <p><b>평균 고도:</b> {{ result.average_altitude }}</p>
+  <p><b>상태:</b> {{ result.message }}</p>
+  <a href="/">다시 입력하기</a>
+{% else %}
+  <p>결과가 없습니다.</p>
+{% endif %}
+{% endblock %}
