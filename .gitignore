@@ -1,6 +1,48 @@
+# 가상환경
 venv/
+.env
+.env.*
+
+# Python 캐시 및 빌드 파일
 __pycache__/
-*.pyc
+*.py[cod]
 *.pyo
 *.pyd
-.env
+*.pdb
+*.so
+
+# IDE / 에디터 설정
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# 로그 및 임시 데이터
+*.log
+logs/
+tmp/
+.cache/
+.ipynb_checkpoints/
+
+# 배포/빌드 관련
+dist/
+build/
+*.egg-info/
+*.spec
+
+# OS 관련
+Thumbs.db
+
+# 테스트 / 데이터
+tests/__pycache__/
+data/*.csv
+data/*.json
+data/*.xlsx
+
+# 파이썬 환경 설정
+*.sqlite3
+*.db
+
+# FastAPI 자동 생성 파일
+__pycache__/
+*.pid
