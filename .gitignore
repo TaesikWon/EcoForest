@@ -1,6 +1,7 @@
-# ===================================
-# 🌲 EcoForest Project .dockerignore
-# ===================================
+# ============================================
+# 🌍 TerraMap Project .gitignore
+# FastAPI + Folium + SQLite + Bootstrap
+# ============================================
 
 # ▶ 가상환경 / 환경 설정
 venv/
@@ -10,7 +11,7 @@ env*/
 .env.*
 .env.local
 
-# ▶ Python 캐시 및 빌드
+# ▶ Python 캐시 / 빌드 아티팩트
 __pycache__/
 *.py[cod]
 *.pyo
@@ -18,14 +19,15 @@ __pycache__/
 *.pdb
 *.so
 
-# ▶ IDE / 에디터 설정
+# ▶ IDE / 편집기 설정
 .vscode/
 .idea/
 .DS_Store
 *.swp
 .history/
+Thumbs.db
 
-# ▶ 로그 / 임시 데이터
+# ▶ 로그 / 임시 파일 / 캐시
 *.log
 logs/
 tmp/
@@ -33,41 +35,45 @@ tmp/
 .ipynb_checkpoints/
 notebooks/
 *.bak
+*.tmp
 
-# ▶ 빌드 / 테스트 / 배포 관련
+# ▶ 테스트 / 커버리지 / 빌드 관련
 dist/
 build/
 *.egg-info/
 *.spec
-site/
+.pytest_cache/
 .coverage*
 htmlcov/
-.pytest_cache/
 coverage.xml
 test-results/
 
-# ▶ 데이터 파일 (Docker 이미지에는 불필요)
-data/
+# ▶ 데이터 / 업로드
 uploads/
-tests/
+cache/
 *.csv
 *.json
 *.xlsx
 *.txt
 
-# ▶ 데이터베이스 / 인스턴스
+# ⚠️ 프로젝트 내부 data/는 분석용 데이터 보존을 위해 추적 유지
+# data/  # ← 주석 해제 시 Git에서 제외됨
+
+# ▶ 데이터베이스 / 인스턴스 파일
 *.sqlite3
 *.db
-ecoforest.db
+TerraMap.db
 instance/
 
-# ▶ Docker 자체 설정 제외
+# ▶ 배포 / Docker 관련
 Dockerfile*
 docker-compose*
 .dockerignore
 
-# ▶ OS 관련
-Thumbs.db
+# ▶ 문서 백업
+*.bak
+~$*
 
-# ▶ 기타 노트북 파일 (선택)
-*.ipynb
+# ▶ OS / 기타
+ehthumbs.db
+desktop.ini
