@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}분석 상세 보기{% endblock %}
+
+{% block content %}
+<div style="max-width:900px; margin:auto;">
+
+  <h2>🌲 분석 상세 보기</h2>
+
+  {% if regions %}
+    <h3>📊 구역별 데이터</h3>
+    <table style="margin:auto; border-collapse:collapse; width:100%; box-shadow:0 0 5px #ccc;">
+      <thead style="background:#e8f5e9;">
+        <tr>
+          <th>구역 이름</th>
+          <th>면적 (ha)</th>
+          <th>고도 (m)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for region in regions %}
+          <tr style="background:#fff;">
+            <td>{{ region[0] }}</td>
+            <td>{{ region[1] }}</td>
+            <td>{{ region[2] }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% if chart %}
+      <h3 style="margin-top:30px;">📈 면적 시각화</h3>
+      <img src="data:image/png;base64,{{ chart }}" alt="분석 차트" style="max-width:100%; border-radius:10px; box-shadow:0 0 8px #ccc;">
+    {% endif %}
+
+    {% if map_html %}
+      <h3 style="margin-top:30px;">🗺️ 지역 지도 시각화</h3>
+      <div style="border:2px solid #4caf50; border-radius:10px; overflow:hidden;">
+        {{ map_html | safe }}
+      </div>
+    {% endif %}
+
+  {% else %}
+    <p>해당 분석에 대한 구역 데이터가 없습니다.</p>
+  {% endif %}
+
+  <hr>
+  <a href="/history" style="text-decoration:none; background:#4caf50; color:white; padding:8px 12px; border-radius:5px;">← 목록으로 돌아가기</a>
+
+</div>
+{% endblock %}

@@ -1,29 +1,55 @@
 {% extends "base.html" %}
-{% block title %}분석 이력{% endblock %}
+{% block title %}분석 이력 목록{% endblock %}
 
 {% block content %}
-<h2>📜 분석 이력</h2>
+<div style="max-width:900px; margin:auto;">
 
-{% if data and data|length > 0 %}
-  <table style="margin:auto; border-collapse:collapse;">
-    <tr style="background:#4caf50; color:white;">
-      <th>ID</th><th>날짜</th><th>총면적</th><th>평균고도</th><th>최고지역</th><th>최저지역</th>
-    </tr>
-    {% for row in data %}
-      <tr>
-        <td>{{ row[0] }}</td>
-        <td>{{ row[1] }}</td>
-        <td>{{ row[2] }}</td>
-        <td>{{ row[3] }}</td>
-        <td>{{ row[4] }}</td>
-        <td>{{ row[5] }}</td>
-      </tr>
-    {% endfor %}
-  </table>
-{% else %}
-  <p>저장된 분석 이력이 없습니다.</p>
-{% endif %}
+  <h2>📜 분석 이력 목록</h2>
 
-<hr>
-<a href="/" style="text-decoration:none; background:#4caf50; color:white; padding:8px 12px; border-radius:5px;">← 새 분석하기</a>
+  <form method="get" action="/history" style="margin-bottom:20px; text-align:center;">
+    <label>날짜 검색:</label>
+    <input type="date" name="start_date">
+    ~
+    <input type="date" name="end_date">
+    <input type="text" name="keyword" placeholder="지역명 검색" style="margin-left:10px;">
+    <button type="submit" style="background:#4caf50; color:white; border:none; padding:6px 10px; border-radius:5px;">검색</button>
+  </form>
+
+  {% if data %}
+    <table style="margin:auto; border-collapse:collapse; width:100%; box-shadow:0 0 5px #ccc;">
+      <thead style="background:#e8f5e9;">
+        <tr>
+          <th>ID</th>
+          <th>날짜</th>
+          <th>총 면적 (ha)</th>
+          <th>평균 고도 (m)</th>
+          <th>최고 고도 지역</th>
+          <th>최저 고도 지역</th>
+          <th>상세보기</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in data %}
+          <tr style="background:#fff;">
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ row[2] }}</td>
+            <td>{{ row[3] }}</td>
+            <td>{{ row[4] }}</td>
+            <td>{{ row[5] }}</td>
+            <td>
+              <a href="/history/{{ row[0] }}" style="text-decoration:none; color:#2e7d32;">보기</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>🔍 조건에 맞는 분석 이력이 없습니다.</p>
+  {% endif %}
+
+  <hr>
+  <a href="/" style="text-decoration:none; background:#4caf50; color:white; padding:8px 12px; border-radius:5px;">← 새 분석하기</a>
+
+</div>
 {% endblock %}
