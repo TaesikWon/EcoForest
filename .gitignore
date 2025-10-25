@@ -1,13 +1,14 @@
 # ===================================
-# 🌲 EcoForest Project .gitignore
+# 🌲 EcoForest Project .dockerignore
 # ===================================
 
-# ▶ 가상환경
+# ▶ 가상환경 / 환경 설정
 venv/
-.env
-.env.*
 .venv/
 env*/
+.env
+.env.*
+.env.local
 
 # ▶ Python 캐시 및 빌드
 __pycache__/
@@ -20,8 +21,9 @@ __pycache__/
 # ▶ IDE / 에디터 설정
 .vscode/
 .idea/
-*.swp
 .DS_Store
+*.swp
+.history/
 
 # ▶ 로그 / 임시 데이터
 *.log
@@ -32,7 +34,7 @@ tmp/
 notebooks/
 *.bak
 
-# ▶ 빌드 / 배포 관련
+# ▶ 빌드 / 테스트 / 배포 관련
 dist/
 build/
 *.egg-info/
@@ -44,35 +46,28 @@ htmlcov/
 coverage.xml
 test-results/
 
-# ▶ 운영체제 관련
-Thumbs.db
-
-# ▶ 데이터 / 테스트 파일
-tests/__pycache__/
-data/*.csv
-data/*.json
-data/*.xlsx
-data/*.txt
-data/tmp/
+# ▶ 데이터 파일 (Docker 이미지에는 불필요)
+data/
 uploads/
+tests/
+*.csv
+*.json
+*.xlsx
+*.txt
 
-# ▶ 파이썬 환경 / DB 파일
+# ▶ 데이터베이스 / 인스턴스
 *.sqlite3
 *.db
-ecoforest.db   # EcoForest SQLite DB
+ecoforest.db
 instance/
-.env.local
 
-# ▶ FastAPI / Uvicorn 런타임
-*.pid
-*.log
-*.lock
-
-# ▶ Docker / 배포
+# ▶ Docker 자체 설정 제외
 Dockerfile*
 docker-compose*
 .dockerignore
 
-# ▶ VSCode / 편집기 캐시
-.history/
-__pycache__/
+# ▶ OS 관련
+Thumbs.db
+
+# ▶ 기타 노트북 파일 (선택)
+*.ipynb
