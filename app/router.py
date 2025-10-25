@@ -1,34 +1,41 @@
-# app/router.py
-from fastapi import APIRouter, Request, Form
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
-from app.service import analyze_forest_data
+from pydantic import ValidationError
+from .service import analyze_forest_data
+from .model import ForestData
+from .db import init_db, save_analysis, get_all_history
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
 
-# 🔹 홈 화면: 입력 폼 표시
-@router.get("/", response_class=HTMLResponse)
-async def home(request: Request):
-    return templates.TemplateResponse("form.html", {"request": request})
+init_db()
 
-# 🔹 폼 입력 처리 → 결과 페이지 렌더링
-@router.post("/analyze", response_class=HTMLResponse)
-async def analyze_forest_form(
-    request: Request,
-    area1: float = Form(...),
-    altitude1: float = Form(...),
-    area2: float = Form(...),
-    altitude2: float = Form(...),
-    area3: float = Form(...),
-    altitude3: float = Form(...)
-):
-    """폼에서 받은 데이터를 분석"""
-    data = [
-        {"area": area1, "altitude": altitude1},
-        {"area": area2, "altitude": altitude2},
-        {"area": area3, "altitude": altitude3},
-    ]
+@router.get("/")
+def show_form(request: Request):
+    return templates.TemplateResponse(request, "form.html", {"request": request})
 
-    result = analyze_forest_data(data)
-    return templates.TemplateResponse("result.html", {"request": request, "result": result})
+@router.post("/analyze")
+async def analyze(request: Request):
+    form = await request.form()
+    try:
+        regions = [
+            {"name": "1", "area": float(form["area1"]), "altitude": float(form["altitude1"])},
+            {"name": "2", "area": float(form["area2"]), "altitude": float(form["altitude2"])},
+            {"name": "3", "area": float(form["area3"]), "altitude": float(form["altitude3"])},
+        ]
+        validated = ForestData(regions=regions)
+        result = analyze_forest_data(validated.model_dump())
+
+        save_analysis(result) 
+
+        return templates.TemplateResponse(request, "result.html", {"request": request, "result": result})
+
+    except ValidationError as ve:
+        return templates.TemplateResponse(request, "error.html", {"request": request, "message": f"입력 오류: {ve}"})
+    except Exception as e:
+        return templates.TemplateResponse(request, "error.html", {"request": request, "message": f"처리 오류: {e}"})
+
+@router.get("/history")
+def history(request: Request):
+    data = get_all_history()
+    return templates.TemplateResponse(request, "history.html", {"request": request, "data": data})

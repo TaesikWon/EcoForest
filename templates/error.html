@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}오류 발생{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 2em auto; padding: 1.5em; border: 2px solid #f44336; border-radius: 10px; background-color: #fff5f5;">
+  <h2 style="color: #d32f2f;">⚠️ 오류가 발생했습니다</h2>
+  <p>{{ message }}</p>
+
+  {% if message and "ValidationError" in message %}
+    <p>입력값이 유효하지 않습니다. 모든 숫자는 양수여야 하며, 고도는 9000m 이하로 입력하세요.</p>
+  {% endif %}
+
+  <hr>
+  <a href="/" style="text-decoration:none; background:#4caf50; color:white; padding:8px 12px; border-radius:5px;">← 입력 화면으로 돌아가기</a>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}분석 이력{% endblock %}
+
+{% block content %}
+<h2>📜 분석 이력</h2>
+
+{% if data and data|length > 0 %}
+  <table style="margin:auto; border-collapse:collapse;">
+    <tr style="background:#4caf50; color:white;">
+      <th>ID</th><th>날짜</th><th>총면적</th><th>평균고도</th><th>최고지역</th><th>최저지역</th>
+    </tr>
+    {% for row in data %}
+      <tr>
+        <td>{{ row[0] }}</td>
+        <td>{{ row[1] }}</td>
+        <td>{{ row[2] }}</td>
+        <td>{{ row[3] }}</td>
+        <td>{{ row[4] }}</td>
+        <td>{{ row[5] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p>저장된 분석 이력이 없습니다.</p>
+{% endif %}
+
+<hr>
+<a href="/" style="text-decoration:none; background:#4caf50; color:white; padding:8px 12px; border-radius:5px;">← 새 분석하기</a>
+{% endblock %}

@@ -7,16 +7,19 @@
   <table>
     <tr><th>구역</th><th>면적</th><th>고도</th></tr>
     <tr>
-      <td>1</td><td><input type="number" step="any" name="area1" required></td>
-      <td><input type="number" step="any" name="altitude1" required></td>
+      <td>1</td>
+      <td><input type="number" step="any" name="area1" required min="1" max="10000"></td>
+      <td><input type="number" step="any" name="altitude1" required min="1" max="9000"></td>
     </tr>
     <tr>
-      <td>2</td><td><input type="number" step="any" name="area2" required></td>
-      <td><input type="number" step="any" name="altitude2" required></td>
+      <td>2</td>
+      <td><input type="number" step="any" name="area2" required min="1" max="10000"></td>
+      <td><input type="number" step="any" name="altitude2" required min="1" max="9000"></td>
     </tr>
     <tr>
-      <td>3</td><td><input type="number" step="any" name="area3" required></td>
-      <td><input type="number" step="any" name="altitude3" required></td>
+      <td>3</td>
+      <td><input type="number" step="any" name="area3" required min="1" max="10000"></td>
+      <td><input type="number" step="any" name="altitude3" required min="1" max="9000"></td>
     </tr>
   </table>
   <button type="submit">분석하기</button>

@@ -1,38 +1,43 @@
-# app/service.py
+import pandas as pd
+import io, base64, folium, matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 
-"""
-ForestEcoAI - 산림 데이터 간단 분석 모듈
-(지금은 기본 구조용, 나중에 GeoPandas 분석으로 확장 가능)
-"""
+def analyze_forest_data(data: dict):
+    df = pd.DataFrame(data["regions"])
 
-def analyze_forest_data(data: list[dict]) -> dict:
-    """
-    입력 데이터 예시:
-    [
-        {"area": 120, "altitude": 300},
-        {"area": 90, "altitude": 280},
-        {"area": 150, "altitude": 350}
-    ]
-
-    출력 예시:
-    {
-        "total_area": 360,
-        "average_altitude": 310.0,
-        "message": "산림 데이터 분석 완료 ✅"
+    summary = {
+        "region_count": len(df),
+        "total_area": df["area"].sum(),
+        "avg_altitude": round(df["altitude"].mean(), 2),
+        "max_altitude_region": df.loc[df["altitude"].idxmax(), "name"],
+        "min_altitude_region": df.loc[df["altitude"].idxmin(), "name"],
     }
-    """
 
-    # 예외 처리
-    if not data:
-        return {"error": "입력된 데이터가 없습니다."}
+    # ✅ matplotlib 그래프
+    fig, ax = plt.subplots()
+    ax.bar(df["name"], df["area"], color="forestgreen")
+    ax.set_title("Forest Area by Region")
+    ax.set_xlabel("Region")
+    ax.set_ylabel("Area (ha)")
 
-    # 총 면적과 평균 고도 계산
-    total_area = sum(item.get("area", 0) for item in data)
-    avg_altitude = sum(item.get("altitude", 0) for item in data) / len(data)
+    buf = io.BytesIO()
+    plt.tight_layout()
+    plt.savefig(buf, format="png")
+    buf.seek(0)
+    summary["chart"] = base64.b64encode(buf.read()).decode("utf-8")
+    plt.close(fig)
 
-    # 결과 리턴
-    return {
-        "total_area": round(total_area, 2),
-        "average_altitude": round(avg_altitude, 2),
-        "message": "산림 데이터 분석 완료 ✅"
-    }
+    # ✅ folium 지도 (예시용: 임의 좌표)
+    m = folium.Map(location=[37.5665, 126.9780], zoom_start=7)  # 기본 서울 중심
+    for _, row in df.iterrows():
+        # 좌표가 있으면 그걸로, 없으면 랜덤 예시
+        lat = 37.5665 + (hash(row["name"]) % 100) / 1000
+        lon = 126.9780 + (hash(row["area"]) % 100) / 1000
+        popup = f"구역 {row['name']}<br>면적: {row['area']} ha<br>고도: {row['altitude']} m"
+        folium.Marker([lat, lon], popup=popup).add_to(m)
+
+    map_html = m._repr_html_()  # HTML 형태로 변환
+    summary["map"] = map_html
+
+    return summary
