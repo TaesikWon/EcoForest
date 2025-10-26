@@ -1,77 +1,79 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>도시 데이터 이력</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>도시 데이터 분석 이력 - TerraMap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #e3f2fd; }
+    .geo-title { color: #1976d2; }
+    .table-primary th { background-color: #90caf9 !important; }
+  </style>
 </head>
 <body class="bg-light">
 
 <div class="container py-5">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold text-primary">🏙️ 도시 데이터 분석 이력</h2>
-        <p class="text-muted">TerraMap에서 저장된 도시 인구 데이터 분석 결과입니다.</p>
-    </div>
+  <div class="text-center mb-5">
+    <h2 class="fw-bold geo-title">🏙️ 도시 데이터 분석 이력</h2>
+    <p class="text-muted">TerraMap에서 저장된 도시 인구 데이터와 AI 성장 점수 기록입니다.</p>
+  </div>
 
-    {% if data and data|length > 0 %}
-    <div class="card shadow-sm">
-        <div class="card-body">
-            <table class="table table-striped align-middle text-center">
-                <thead class="table-primary">
-                    <tr>
-                        <th>ID</th>
-                        <th>지역명</th>
-                        <th>인구수 (명)</th>
-                        <th>인구밀도 (명/km²)</th>
-                        <th>좌표 (위도, 경도)</th>
-                        <th>분석일시</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data %}
-                    <tr>
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ "{:,}".format(row[5]) }}</td>
-                        <td>{{ "{:,.1f}".format(row[6]) }}</td>
-                        <td>{{ row[2] }}, {{ row[3] }}</td>
-                        <td>{{ row[7] }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+  {% if data and data|length > 0 %}
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <table class="table table-striped align-middle text-center">
+        <thead class="table-primary">
+          <tr>
+            <th>ID</th>
+            <th>지역명</th>
+            <th>인구수 (명)</th>
+            <th>인구밀도 (명/km²)</th>
+            <th>좌표 (위도, 경도)</th>
+            <th>AI 성장도</th>
+            <th>분석일시</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in data %}
+          <tr>
+            <td>{{ row[0] }}</td>
+            <td>{{ row[1] }}</td>
+            <td>{{ "{:,}".format(row[5]) }}</td>
+            <td>{{ "{:,.1f}".format(row[6]) }}</td>
+            <td>{{ row[2] }}, {{ row[3] }}</td>
+            <td>
+              {% set score = (row[8] if row|length > 8 else None) %}
+              {% if score %}
+                {% if score >= 0.8 %}
+                  <span class="badge bg-primary">{{ "%.2f"|format(score) }}</span>
+                {% elif score >= 0.5 %}
+                  <span class="badge bg-warning text-dark">{{ "%.2f"|format(score) }}</span>
+                {% else %}
+                  <span class="badge bg-danger">{{ "%.2f"|format(score) }}</span>
+                {% endif %}
+              {% else %}
+                <span class="text-muted">-</span>
+              {% endif %}
+            </td>
+            <td>{{ row[7] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    {% else %}
-        <div class="alert alert-info text-center">
-            아직 저장된 도시 데이터가 없습니다.  
-            <a href="/analyze/urban" class="alert-link">도시 데이터 분석</a>을 먼저 진행해보세요.
-        </div>
-    {% endif %}
+  </div>
+  {% else %}
+  <div class="alert alert-info text-center">
+    아직 저장된 도시 데이터가 없습니다.<br>
+    <a href="/geo/analyze" class="alert-link">도시 데이터 분석</a>을 먼저 진행해보세요.
+  </div>
+  {% endif %}
 
-    <div class="text-center mt-4">
-        <a href="/" class="btn btn-outline-primary px-4">홈으로</a>
-    </div>
+  <div class="text-center mt-4">
+    <a href="/" class="btn btn-outline-primary px-4">홈으로</a>
+  </div>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-```
-
----
-
-**✅ 완료!**
-
-**변경 사항:**
-- area, value → population, population_density
-- 그래프: 인구수 표시
-- 지도: 인구 정보 팝업
-- DB 컬럼 변경
-
-**테스트 예시:**
-```
-지역명: 강남구
-위도: 37.517
-경도: 127.047
-인구수: 560000
-인구밀도: 14500

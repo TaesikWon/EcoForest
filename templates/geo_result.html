@@ -6,25 +6,21 @@
   <title>도시 분석 결과 - TerraMap</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #e3f2fd;
-    }
-    .result-title {
-      color: #1976d2;
-    }
-    .btn-primary-custom {
+    body { background-color: #e3f2fd; }
+    .geo-title { color: #1976d2; }
+    .btn-geo {
       background-color: #1976d2;
       border-color: #1976d2;
       color: white;
     }
-    .btn-primary-custom:hover {
+    .btn-geo:hover {
       background-color: #1565c0;
     }
-    .btn-outline-custom {
+    .btn-outline-geo {
       color: #1976d2;
       border-color: #1976d2;
     }
-    .btn-outline-custom:hover {
+    .btn-outline-geo:hover {
       background-color: #1976d2;
       color: white;
     }
@@ -34,14 +30,14 @@
 
 <div class="container my-5">
   <div class="text-center mb-4">
-    <h2 class="fw-bold result-title">🏙️ 도시 분석 결과</h2>
-    <p class="text-muted">입력한 인구 데이터를 시각화한 결과입니다.</p>
+    <h2 class="fw-bold geo-title">🏙️ 도시 분석 결과</h2>
+    <p class="text-muted">입력한 인구 데이터를 시각화하고, AI가 분석한 도시 성장도를 제공합니다.</p>
   </div>
 
   <!-- 요약 정보 -->
   <div class="card shadow-sm mb-4">
     <div class="card-body">
-      <h5 class="card-title result-title">{{ region.name }}</h5>
+      <h5 class="card-title geo-title">{{ region.name }}</h5>
       <ul class="list-group list-group-flush">
         <li class="list-group-item"><b>위도:</b> {{ region.latitude }}</li>
         <li class="list-group-item"><b>경도:</b> {{ region.longitude }}</li>
@@ -51,7 +47,23 @@
     </div>
   </div>
 
-  <!-- 그래프 -->
+  <!-- 🤖 AI 도시 성장도 -->
+  <div class="card shadow-sm mb-4 text-center">
+    <div class="card-body">
+      <h5 class="card-title geo-title">🤖 AI 도시 성장도</h5>
+      <h3 class="fw-bold text-primary">{{ urban_score }}</h3>
+      <p class="text-muted">AI 모델이 예측한 도시 성장 가능성 점수입니다.</p>
+      {% if urban_score >= 0.8 %}
+        <span class="badge bg-primary">급속 성장 도시 🚀</span>
+      {% elif urban_score >= 0.5 %}
+        <span class="badge bg-warning text-dark">안정적 성장 도시 🌆</span>
+      {% else %}
+        <span class="badge bg-danger">저성장 도시 ⚠️</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 📊 그래프 -->
   <div class="card shadow-sm mb-4">
     <div class="card-body text-center">
       <h5 class="card-title">📊 인구 시각화</h5>
@@ -59,20 +71,18 @@
     </div>
   </div>
 
-  <!-- 지도 -->
+  <!-- 🗺️ 지도 -->
   <div class="card shadow-sm mb-4">
     <div class="card-body">
       <h5 class="card-title">🗺️ 지도 시각화</h5>
-      <div style="height: 500px;">
-        {{ map_html | safe }}
-      </div>
+      <div style="height: 500px;">{{ map_html | safe }}</div>
     </div>
   </div>
 
   <!-- 버튼 -->
   <div class="text-center">
-    <a href="/analyze/urban" class="btn btn-outline-custom me-2">새 분석</a>
-    <a href="/geo/history" class="btn btn-primary-custom">이력 보기</a>
+    <a href="/geo/analyze" class="btn btn-outline-geo me-2">새 분석</a>
+    <a href="/geo/history" class="btn btn-geo">이력 보기</a>
   </div>
 </div>
 

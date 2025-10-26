@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>생태 분석 결과 - TerraMap</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8fdf6; }
+    .eco-title { color: #2e7d32; }
+    .btn-eco {
+      background-color: #43a047;
+      border-color: #43a047;
+      color: white;
+    }
+    .btn-eco:hover {
+      background-color: #2e7d32;
+    }
+    .btn-outline-eco {
+      border-color: #43a047;
+      color: #43a047;
+    }
+    .btn-outline-eco:hover {
+      background-color: #43a047;
+      color: white;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+<div class="container my-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold eco-title">🌿 생태 분석 결과</h2>
+    <p class="text-muted">입력한 생태 데이터를 시각화하고, AI가 분석한 결과를 제공합니다.</p>
+  </div>
+
+  <!-- 요약 정보 -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="card-title eco-title">{{ region.name }}</h5>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><b>면적:</b> {{ region.area }} ha</li>
+        <li class="list-group-item"><b>평균 고도:</b> {{ region.altitude }} m</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 🤖 AI 생태 점수 -->
+  <div class="card shadow-sm mb-4 text-center">
+    <div class="card-body">
+      <h5 class="card-title eco-title">🤖 AI 생태 점수</h5>
+      <h3 class="fw-bold text-success">{{ eco_score }}</h3>
+      <p class="text-muted">AI 모델이 예측한 이 지역의 생태 건강 점수입니다.</p>
+      {% if eco_score >= 0.8 %}
+        <span class="badge bg-success">양호한 생태 상태 🌳</span>
+      {% elif eco_score >= 0.5 %}
+        <span class="badge bg-warning text-dark">보통 수준 🌿</span>
+      {% else %}
+        <span class="badge bg-danger">취약 지역 ⚠️</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 📊 그래프 -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body text-center">
+      <h5 class="card-title">📊 그래프 시각화</h5>
+      <img src="data:image/png;base64,{{ chart }}" alt="Eco Chart" class="img-fluid rounded">
+    </div>
+  </div>
+
+  <!-- 🗺️ 지도 -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="card-title">🗺️ 지도 시각화</h5>
+      <div style="height: 500px;">
+        {{ map_html | safe }}
+      </div>
+    </div>
+  </div>
+
+  <!-- 버튼 -->
+  <div class="text-center">
+    <a href="/eco/analyze" class="btn btn-outline-eco me-2">새 분석</a>
+    <a href="/eco/history" class="btn btn-eco">이력 보기</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

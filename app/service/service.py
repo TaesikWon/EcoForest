@@ -2,13 +2,17 @@ import pandas as pd
 import io, base64, folium, matplotlib
 from datetime import datetime
 
-# 백엔드 환경용 설정 (GUI 백엔드 방지)
+# ✅ 백엔드 환경용 설정 (GUI 백엔드 방지)
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
+# ✅ 한글 폰트 설정 (Windows용)
+plt.rcParams["font.family"] = "Malgun Gothic"
+plt.rcParams["axes.unicode_minus"] = False  # 마이너스 깨짐 방지
+
 
 def analyze_forest_data(data: dict):
-    """산림 데이터 분석 및 시각화"""
+    """🌿 산림/생태 데이터 분석 및 시각화"""
     df = pd.DataFrame(data.get("regions", []))
 
     if df.empty:
@@ -21,16 +25,16 @@ def analyze_forest_data(data: dict):
         "avg_altitude": round(df["altitude"].mean(), 2),
         "max_altitude_region": df.loc[df["altitude"].idxmax(), "name"],
         "min_altitude_region": df.loc[df["altitude"].idxmin(), "name"],
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
     }
 
     # ✅ matplotlib 그래프
     fig, ax = plt.subplots(figsize=(6, 4))
     ax.bar(df["name"], df["area"], color="forestgreen")
-    ax.set_title("🌲 Forest Area by Region")
+    ax.set_title("Forest Area by Region")  # 🌲 이모지 제거 (폰트 경고 방지)
     ax.set_xlabel("Region")
     ax.set_ylabel("Area (ha)")
-    ax.tick_params(axis='x', rotation=30)
+    ax.tick_params(axis="x", rotation=30)
 
     buf = io.BytesIO()
     plt.tight_layout()
@@ -40,7 +44,6 @@ def analyze_forest_data(data: dict):
     plt.close(fig)
 
     # ✅ folium 지도
-    # 중심 좌표 자동 계산 (없으면 서울)
     lat_mean = df["lat"].mean() if "lat" in df.columns else 37.5665
     lon_mean = df["lon"].mean() if "lon" in df.columns else 126.9780
 
@@ -48,7 +51,7 @@ def analyze_forest_data(data: dict):
         location=[lat_mean, lon_mean],
         zoom_start=7,
         tiles="Stamen Terrain",
-        attr="Esri, Maxar, Earthstar Geographics, and the GIS User Community"
+        attr="Esri, Maxar, Earthstar Geographics, and the GIS User Community",
     )
 
     for _, row in df.iterrows():
@@ -62,9 +65,8 @@ def analyze_forest_data(data: dict):
         folium.Marker(
             [lat, lon],
             popup=popup,
-            icon=folium.Icon(color="green", icon="tree-conifer", prefix="glyphicon")
+            icon=folium.Icon(color="green", icon="tree-conifer", prefix="glyphicon"),
         ).add_to(m)
 
     summary["map"] = m._repr_html_()
-
     return summary
