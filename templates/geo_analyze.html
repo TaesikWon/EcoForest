@@ -1,0 +1,23 @@
+<!-- templates/geo_analyze.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-primary mb-4">🏙️ 도시 분석</h2>
+  <form method="post" action="/geo/analyze">
+    <div class="mb-3">
+      <label class="form-label">도시명</label>
+      <input type="text" name="city" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">분석 실행</button>
+  </form>
+
+  {% if result %}
+  <div class="card mt-4">
+    <div class="card-header bg-light">분석 결과</div>
+    <div class="card-body">
+      <pre>{{ result }}</pre>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

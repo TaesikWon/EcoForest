@@ -1,13 +1,19 @@
 # main.py
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from app.routers import eco_router, geo_router, rag_router
 
+# ✅ 환경 로드 (.env 또는 .env.prod)
+env_file = ".env.prod" if os.getenv("ENV") == "production" else ".env"
+load_dotenv(dotenv_path=env_file)
+
 # ✅ FastAPI 앱 생성
 app = FastAPI(title="TerraMap 🌍 AI Platform")
 
-# ✅ 정적 파일 연결 (Bootstrap, 이미지 등)
+# ✅ 정적 파일 연결
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # ✅ 템플릿 엔진 설정
@@ -29,4 +35,4 @@ def home(request: Request):
 # ✅ 직접 실행용
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("app.main:app", host="127.0.0.1", port=8000, reload=True)
