@@ -1,3 +1,4 @@
+<!-- templates/eco_history.html -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -17,44 +18,46 @@
   <h2 class="fw-bold eco-title mb-4 text-center">🌿 생태 분석 이력</h2>
   <p class="text-muted text-center mb-4">TerraMap에서 분석된 생태 데이터와 AI 예측 점수 기록입니다.</p>
 
-  {% if data %}
-    <table class="table table-hover align-middle bg-white shadow-sm rounded">
-      <thead class="table-success text-center">
-        <tr>
-          <th>ID</th>
-          <th>지역 이름</th>
-          <th>면적 (ha)</th>
-          <th>평균 고도 (m)</th>
-          <th>AI 생태 점수</th>
-          <th>분석일시</th>
-        </tr>
-      </thead>
-      <tbody class="text-center">
-        {% for row in data %}
-        <tr>
-          <td>{{ row[0] }}</td>
-          <td>{{ row[1] }}</td>
-          <td>{{ row[2] }}</td>
-          <td>{{ row[3] }}</td>
-          <td>
-            {% set score = (row[5] if row|length > 5 else None) %}
-            {% if score %}
-              {% if score >= 0.8 %}
-                <span class="badge bg-success">{{ "%.2f"|format(score) }}</span>
-              {% elif score >= 0.5 %}
-                <span class="badge bg-warning text-dark">{{ "%.2f"|format(score) }}</span>
-              {% else %}
-                <span class="badge bg-danger">{{ "%.2f"|format(score) }}</span>
-              {% endif %}
+  {% if data and data|length > 0 %}
+  <table class="table table-hover align-middle bg-white shadow-sm rounded">
+    <thead class="table-success text-center">
+      <tr>
+        <th>ID</th>
+        <th>지역</th>
+        <th>산림면적 (ha)</th>
+        <th>대기질</th>
+        <th>생물다양성</th>
+        <th>AI 생태 점수</th>
+        <th>분석일시</th>
+      </tr>
+    </thead>
+    <tbody class="text-center">
+      {% for row in data %}
+      <tr>
+        <td>{{ row[0] }}</td>
+        <td>{{ row[1] }}</td>
+        <td>{{ "%.1f"|format(row[2]) }}</td>
+        <td>{{ "%.1f"|format(row[3]) }}</td>
+        <td>{{ "%.1f"|format(row[4]) }}</td>
+        <td>
+          {% set score = row[5] %}
+          {% if score is not none %}
+            {% if score >= 0.8 %}
+              <span class="badge bg-success">{{ "%.2f"|format(score) }}</span>
+            {% elif score >= 0.5 %}
+              <span class="badge bg-warning text-dark">{{ "%.2f"|format(score) }}</span>
             {% else %}
-              <span class="text-muted">-</span>
+              <span class="badge bg-danger">{{ "%.2f"|format(score) }}</span>
             {% endif %}
-          </td>
-          <td>{{ row[4] }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+          {% else %}
+            <span class="text-muted">-</span>
+          {% endif %}
+        </td>
+        <td>{{ row[6] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   {% else %}
     <div class="alert alert-warning text-center">분석 이력이 없습니다.</div>
   {% endif %}
